@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"net/http"
 	"os"
@@ -15,11 +16,11 @@ import (
 )
 
 func main() {
-	var token, guildId, iconsDir string
-	flag.StringVar(&token, "t", "", "discord token")
-	flag.StringVar(&guildId, "g", "", "ID of the guild to modify")
-	flag.StringVar(&iconsDir, "i", "icons", "directory to choose an icon from")
+	tokenPtr := flag.String("t", "", "discord token")
+	guildIdPtr := flag.String("g", "", "ID of the guild to modify")
+	iconsDirPtr := flag.String("i", "icons", "directory to choose an icon from")
 	flag.Parse()
+	token, guildId, iconsDir := *tokenPtr, *guildIdPtr, *iconsDirPtr
 	if token == "" || guildId == "" || iconsDir == "" {
 		flag.Usage()
 		os.Exit(1)
@@ -27,30 +28,25 @@ func main() {
 
 	discord, err := discordgo.New("Bot " + token)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "error with discord initialization:", err)
-		os.Exit(2)
+		log.Fatalf("error with discord initialization: %v", err)
 	}
 	
-	err = discord.Open()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "error opening discord connection:", err)
-		os.Exit(2)
+	if err := discord.Open(); err != nil {
+		log.Fatalf("error opening discord connection: %v", err)
 	}
 
 	fmt.Println("connected to discord")
 
 	files, err := ioutil.ReadDir(iconsDir)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error reading `%s` directory: %v\n", iconsDir, err)
-		os.Exit(2)
+		log.Fatalf("error reading `%s` directory: %v", iconsDir, err)
 	}
 
 	rand.Seed(time.Now().UnixNano())
 	filename := filepath.Join(iconsDir, files[rand.Intn(len(files))].Name())
 	bytes, err := ioutil.ReadFile(filename)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error reading `%s`: %v\n", filename, err)
-		os.Exit(2)
+		log.Fatalf("error reading `%s`: %v", filename, err)
 	}
 
 	fmt.Printf("using `%s`\n", filename)
@@ -62,7 +58,6 @@ func main() {
 		Icon: dataUrl,
 	})
 	if err != nil {
-		fmt.Println("error setting icon:", err)
-		os.Exit(2)
+		log.Fatalf("error setting icon: %v", err)
 	}
 }
