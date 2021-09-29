@@ -16,17 +16,16 @@ import (
 )
 
 func main() {
-	tokenPtr := flag.String("t", "", "discord token")
-	guildIdPtr := flag.String("g", "", "ID of the guild to modify")
-	iconsDirPtr := flag.String("i", "icons", "directory to choose an icon from")
+	token := flag.String("t", "", "discord token")
+	guildId := flag.String("g", "", "ID of the guild to modify")
+	iconsDir := flag.String("i", "icons", "directory to choose an icon from")
 	flag.Parse()
-	token, guildId, iconsDir := *tokenPtr, *guildIdPtr, *iconsDirPtr
-	if token == "" || guildId == "" || iconsDir == "" {
+	if *token == "" || *guildId == "" || *iconsDir == "" {
 		flag.Usage()
 		os.Exit(1)
 	}
 
-	discord, err := discordgo.New("Bot " + token)
+	discord, err := discordgo.New("Bot " + *token)
 	if err != nil {
 		log.Fatalf("error with discord initialization: %v", err)
 	}
@@ -37,13 +36,13 @@ func main() {
 
 	fmt.Println("connected to discord")
 
-	files, err := ioutil.ReadDir(iconsDir)
+	files, err := ioutil.ReadDir(*iconsDir)
 	if err != nil {
-		log.Fatalf("error reading `%s` directory: %v", iconsDir, err)
+		log.Fatalf("error reading `%s` directory: %v", *iconsDir, err)
 	}
 
 	rand.Seed(time.Now().UnixNano())
-	filename := filepath.Join(iconsDir, files[rand.Intn(len(files))].Name())
+	filename := filepath.Join(*iconsDir, files[rand.Intn(len(files))].Name())
 	bytes, err := ioutil.ReadFile(filename)
 	if err != nil {
 		log.Fatalf("error reading `%s`: %v", filename, err)
@@ -52,10 +51,10 @@ func main() {
 	fmt.Printf("using `%s`\n", filename)
 
 	mime := http.DetectContentType(bytes)
-	dataUrl := fmt.Sprintf("data:%s;base64,%s", mime, base64.StdEncoding.EncodeToString(bytes))
+	dataURL := fmt.Sprintf("data:%s;base64,%s", mime, base64.StdEncoding.EncodeToString(bytes))
 
-	_, err = discord.GuildEdit(guildId, discordgo.GuildParams{
-		Icon: dataUrl,
+	_, err = discord.GuildEdit(*guildId, discordgo.GuildParams{
+		Icon: dataURL,
 	})
 	if err != nil {
 		log.Fatalf("error setting icon: %v", err)
