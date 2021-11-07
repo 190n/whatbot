@@ -4,14 +4,11 @@ Discord bot to randomize a server's icon.
 
 ## Usage
 
-```
-Usage of ./whatbot:
-  -g string
-        ID of the guild to modify
-  -i string
-        directory to choose an icon from (default "icons")
-  -t string
-        discord token
-```
+Install dependencies: `yarn`
 
-When run, whatbot will connect, set the server icon to a random file from the specified directory, and then immediately disconnect. To change the icon regularly, you will need another tool set up to run whatbot at regular intervals. Keep in mind that Discord limits you to 2 icon changes every 5 minutes. If this limit has been met, whatbot will hang.
+Set the environment variables:
+
+- `DISCORD_TOKEN` = bot token to access Discord's API
+- `GUILD_ID` = ID of the guild to set the icon of
+
+Run `node whatbot.js`. It will pick a random icon from the `icons` directory in the same directory as the script and set it.
