@@ -1,0 +1,14 @@
+{
+  "name": "whatbot",
+  "version": "1.0.0",
+  "main": "whatbot.js",
+  "repository": "git@github.com:190n/whatbot.git",
+  "author": "Ben Grant <benjamin.j.grant@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "discord.js": "^13.3.1",
+    "dotenv": "^10.0.0"
+  }
+}
