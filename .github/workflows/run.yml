@@ -16,3 +16,6 @@ jobs:
         node-version: '16'
     - uses: bahmutov/npm-install@v1
     - run: node whatbot.js
+      env:
+        DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        GUILD_ID: ${{ secrets.GUILD_ID }}

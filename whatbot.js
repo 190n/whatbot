@@ -4,7 +4,6 @@ import fs from 'fs';
 import path from 'path';
 import { Client, Intents } from 'discord.js';
 
-console.log(process.env);
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 client.on('ready', async () => {
