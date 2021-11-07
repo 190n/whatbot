@@ -10,6 +10,7 @@ client.on('ready', async () => {
 	console.log(`Logged in as ${client.user.tag}!`);
 
 	try {
+		console.log(process.env);
 		const guild = await client.guilds.fetch(process.env.GUILD_ID);
 		const iconsDir = path.join(path.dirname(import.meta.url.substr(7)), 'icons');
 		const files = await fs.promises.readdir(iconsDir);
